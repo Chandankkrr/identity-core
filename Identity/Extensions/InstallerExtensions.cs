@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using Identity.Installers;
+using Identity.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

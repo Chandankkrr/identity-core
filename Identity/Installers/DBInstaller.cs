@@ -1,5 +1,6 @@
 using Identity.DBContext;
 using Identity.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +15,11 @@ namespace Identity.Installers
             {
                 options.UseNpgsql(configuration.GetConnectionString("IdentityCoreDBConnection"));
             });
+
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+                options.SignIn.RequireConfirmedEmail = true)
+            .AddEntityFrameworkStores<IdentityCoreDbContext>()
+            .AddDefaultTokenProviders();
         }
     }
 }
