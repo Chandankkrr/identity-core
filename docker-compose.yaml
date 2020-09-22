@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  api:
+    build: Identity/
+    depends_on:
+      - identity-postgres
+    ports:
+      - 5001:5001
+    environment:
+      IdentityCoreDBConnection: Host=identitycore;Database=identity-core;Username=postgres;Password=postgres
+    restart: always
+
+  identity-postgres:
+    image: postgres:latest
+    ports:
+      - 5432
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: identity-core
+    volumes:
+      - identity-postgres-data:/var/lib/postgres
+volumes:
+  identity-postgres-data:
+
+networks:
+    identitycore:
+        name: identitycore 
