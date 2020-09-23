@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Identity.DBContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace Identity
 {
@@ -47,6 +49,13 @@ namespace Identity
             {
                 endpoints.MapControllers();
             });
+
+            // TODO: remove ef migrations on startup
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var identityCoreDbContext = serviceScope.ServiceProvider.GetRequiredService<IdentityCoreDbContext>();
+                identityCoreDbContext.Database.Migrate();
+            }
         }
     }
 }
