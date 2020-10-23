@@ -7,6 +7,7 @@ networks:
 
 services:
   identity-core-api:
+    container_name: identity-core-api
     build: Identity/
     restart: always
     networks: 
@@ -17,11 +18,12 @@ services:
       - identity-core-db
 
   identity-core-db:
+    container_name: identity-core-postgres
     image: postgres:latest
     networks: 
       - identity-network
     ports:
-      - 5432
+      - 5432:5432
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -30,7 +32,26 @@ services:
     volumes:
       - identity-postgres-data:/var/lib/postgres
 
+  prometheus-monitoring:
+    container_name: identity-core-prometheus
+    image: prom/prometheus
+    networks: 
+      - identity-network
+    ports:
+      - 9090:9090
+    volumes:
+          - type: bind
+            source: ./prometheus.yml
+            target: /var/lib/identity-prometheues-monitoring/prometheus.yml
+
+  grafana-dashboard:
+    container_name: identity-core-grafana
+    image: grafana/grafana
+    networks: 
+      - identity-network
+    ports:
+      - 3000:3000
+
 volumes:
   identity-postgres-data:
 
-    
