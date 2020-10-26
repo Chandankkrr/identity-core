@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using Identity.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Identity.Services
@@ -11,10 +12,12 @@ namespace Identity.Services
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
+        private readonly ILogger<TokenService> _logger;
 
-        public TokenService(IConfiguration configuration)
+        public TokenService(IConfiguration configuration, ILogger<TokenService> logger)
         {
             _configuration = configuration;
+            _logger = logger;
         }
 
         public string GenerateToken(string userId)
@@ -38,6 +41,8 @@ namespace Identity.Services
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
+
+            _logger.LogInformation($"Successfully generated token for user with id {userId}");
 
             return tokenString;
         }

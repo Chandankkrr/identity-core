@@ -42,7 +42,7 @@ namespace Identity.Controllers
 
             var registrationResponse = await _identityService.RegisterAsync(user, request.Password);
 
-            if(!registrationResponse.Success)
+            if (!registrationResponse.Success)
             {
                 return BadRequest(new RegistrationResponse
                 {
@@ -50,12 +50,12 @@ namespace Identity.Controllers
                 });
             }
 
-            var emailConfirmationToken = await _identityService.GenerateEmailConfirmationToken(user);
+            var emailConfirmationToken = await _identityService.GenerateEmailConfirmationTokenAsync(user);
             var emailConfirmationLink = Url.Action(nameof(VerifyEmail), "Account", new
-                {
-                    email = user.Email,
-                    token = emailConfirmationToken
-                },
+            {
+                email = user.Email,
+                token = emailConfirmationToken
+            },
                 Request.Scheme
             );
 
@@ -78,7 +78,7 @@ namespace Identity.Controllers
             }
 
             var emailConfirmationResponse = await _identityService.ConfirmEmailAsync(request.Email, request.Token);
-            
+
             if (!emailConfirmationResponse.Success)
             {
                 return BadRequest(emailConfirmationResponse.Errors);

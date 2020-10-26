@@ -20,17 +20,47 @@ namespace Identity.Services
             _logger = logger;
         }
 
+        public async Task<LoginResponse> LoginAsync(string email, string password)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                var userNotFoundMessage = $"User with email: {email} does not exist";
+
+                _logger.LogWarning(userNotFoundMessage);
+
+                return new LoginResponse { Errors = new string[] { userNotFoundMessage } };
+            }
+
+            var isValidEmailPasswordCombination = await _userManager.CheckPasswordAsync(user, password);
+
+            if (!isValidEmailPasswordCombination)
+            {
+                _logger.LogWarning($"Login failed for user, email or password is incorrect");
+
+                return new LoginResponse { Errors = new string[] { "Email or password is incorrect" } };
+            }
+
+            var token = _tokenService.GenerateToken(user.Id);
+
+            return new LoginResponse
+            {
+                Success = true,
+                Token = token
+            };
+        }
+
         public async Task<RegistrationResponse> RegisterAsync(IdentityUser user, string password)
         {
             var email = user.Email;
             var userExists = await _userManager.FindByEmailAsync(email);
 
-            if(userExists != null)
+            if (userExists != null)
             {
                 return new RegistrationResponse
                 {
                     Errors = new[] { $"User with email {email} already exists" }
-                };   
+                };
             }
 
             var result = await _userManager.CreateAsync(user, password);
@@ -52,7 +82,7 @@ namespace Identity.Services
             };
         }
 
-        public async Task<string> GenerateEmailConfirmationToken(IdentityUser user)
+        public async Task<string> GenerateEmailConfirmationTokenAsync(IdentityUser user)
         {
             var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
@@ -65,7 +95,8 @@ namespace Identity.Services
             if (user == null)
             {
                 var userNotFoundMessage = $"User with email: {email} does not exist";
-                _logger.LogInformation(userNotFoundMessage);
+
+                _logger.LogWarning(userNotFoundMessage);
 
                 return new EmailConfirmationResponse
                 {
