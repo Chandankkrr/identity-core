@@ -1,5 +1,6 @@
 ﻿using Identity.Models.Response;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Identity.Services
@@ -13,5 +14,7 @@ namespace Identity.Services
         Task<EmailConfirmationResponse> ConfirmEmailAsync(string email, string token);
 
         Task<string> GenerateEmailConfirmationTokenAsync(IdentityUser user);
+
+        IEnumerable<IdentityUser> GetAllUsers();
     }
 }

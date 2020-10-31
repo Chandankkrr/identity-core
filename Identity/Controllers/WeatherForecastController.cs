@@ -40,7 +40,7 @@ namespace Identity.Controllers
         [HttpGet("container")]
         public string ContainerId()
         {
-            return Dns.GetHostName() + "Machine: " + System.Environment.MachineName;
+            return "Machine: " + System.Environment.MachineName;
         }
     }
 }

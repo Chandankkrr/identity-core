@@ -2,6 +2,7 @@
 using Identity.Models.Response;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -118,6 +119,11 @@ namespace Identity.Services
                 EmailConfirmed = true,
                 Success = true
             };
+        }
+
+        public IEnumerable<IdentityUser> GetAllUsers()
+        {
+            return _userManager.Users.ToList();
         }
     }
 }

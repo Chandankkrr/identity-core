@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Identity.Controllers
 {
+    // [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class AccountController : ControllerBase
@@ -23,6 +24,7 @@ namespace Identity.Controllers
             _logger = logger;
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationRequest request)
         {
@@ -86,5 +88,17 @@ namespace Identity.Controllers
 
             return Ok(emailConfirmationResponse);
         }
+
+        [HttpGet("getAllUsers")]
+        public IActionResult GetAllUsers()
+        {
+            var users = _identityService.GetAllUsers().Select(u => new User
+            {
+                Email = u.Email
+            }).ToList();
+
+            return Ok(users);
+        }
+
     }
 }
