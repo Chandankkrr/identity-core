@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
       - name: identity-core-api
-        image: identity-core-api1:latest
-        imagePullPolicy: Never
+        image: chandanrauniyar/identity-core-api:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
         resources:
