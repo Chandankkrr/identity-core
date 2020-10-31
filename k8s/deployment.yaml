@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity-core-api
+  labels:
+    app: identity-core-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: identity-core-api
+  template:
+    metadata:
+      labels:
+        app: identity-core-api
+    spec:
+      containers:
+      - name: identity-core-api
+        image: identity-core-api1:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 200m
+            memory: 200Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: identity-core-api-service
+spec:
+ type: LoadBalancer
+ ports:
+ - port: 80
+ selector:
+   app: identity-core-api
+
+---
+
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: identity-core-api-ingress
+  labels:
+    app: identity-core-api-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: identity-core-api-service
+          servicePort: 80

@@ -51,11 +51,11 @@ namespace Identity
             });
 
             // TODO: remove ef migrations on startup
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                var identityCoreDbContext = serviceScope.ServiceProvider.GetRequiredService<IdentityCoreDbContext>();
-                identityCoreDbContext.Database.Migrate();
-            }
+            // using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            // {
+            //    var identityCoreDbContext = serviceScope.ServiceProvider.GetRequiredService<IdentityCoreDbContext>();
+            //    identityCoreDbContext.Database.Migrate();
+            // }
         }
     }
 }
